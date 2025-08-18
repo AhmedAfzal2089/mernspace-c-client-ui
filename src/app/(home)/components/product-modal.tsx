@@ -3,11 +3,12 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import ToppingList from "./topping-list";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { Product } from "@/lib";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ProductModal = ({ product }: { product: Product }) => {
   const handleAddtoCart = () => {
@@ -64,7 +65,9 @@ const ProductModal = ({ product }: { product: Product }) => {
                 );
               }
             )}
-            <ToppingList />
+            <Suspense fallback={"Topping Loading...."}>
+              <ToppingList />
+            </Suspense>
             <div className="flex items-center justify-between mt-12 ">
               <span className="font-bold">&#8360; 460</span>
               <Button onClick={handleAddtoCart}>

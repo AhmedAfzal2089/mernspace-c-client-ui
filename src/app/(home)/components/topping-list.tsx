@@ -1,49 +1,52 @@
-"use client";
-import { useState } from "react";
-import ToppingCard, { Topping } from "./topping-card";
+import React, { useEffect, useState } from "react";
+import ToppingCard from "./topping-card";
+import { Topping } from "@/lib";
 
-const toppings = [
-  {
-    id: "1",
-    name: "Chicken",
-    image: "/chicken.png",
-    price: 50,
-    isAvailable: true,
-  },
-  {
-    id: "2",
-    name: "Jelapeno",
-    image: "/jelapeno.png",
-    price: 50,
-    isAvailable: true,
-  },
-  {
-    id: "3",
-    name: "Cheese",
-    image: "/cheese.png",
-    price: 50,
-    isAvailable: true,
-  },
-];
+const ToppingList = async () => {
+  const [toppings, setToppings] = useState<Topping[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=9`
+        );
+        const json = await response.json();
 
-const ToppingList = () => {
-  const [selectedToppings, setSelectedToppings] = useState([toppings[0]]);
-  // when we have pass something from child to parent then a function is used
+        if (Array.isArray(json.data)) {
+          setToppings(json.data); // ✅ Only set the toppings array
+        } else {
+          console.error("Expected array in json.data, got:", json.data);
+          setToppings([]);
+        }
+      } catch (error) {
+        console.error("Error fetching toppings:", error);
+        setToppings([]);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
+
   const handleCheckBoxCheck = (topping: Topping) => {
     const isAlreadyExists = selectedToppings.some(
-      (element) => element.id === topping.id
+      (element: Topping) => element.id === topping.id
     );
+
     if (isAlreadyExists) {
       setSelectedToppings((prev) =>
-        prev.filter((elm) => elm.id !== topping.id)
+        prev.filter((elm: Topping) => elm.id !== topping.id)
       );
       return;
     }
-    setSelectedToppings((prev) => [...prev, topping]);
+
+    setSelectedToppings((prev: Topping[]) => [...prev, topping]);
   };
+
   return (
     <section className="mt-6">
-      <h3>Extra Toppings</h3>
+      <h3>Extra toppings</h3>
       <div className="grid grid-cols-3 gap-4 mt-2">
         {toppings.map((topping) => {
           return (

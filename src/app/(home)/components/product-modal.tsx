@@ -1,3 +1,4 @@
+"use client";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -9,6 +10,10 @@ import { ShoppingCart } from "lucide-react";
 import { Product } from "@/lib";
 
 const ProductModal = ({ product }: { product: Product }) => {
+  const handleAddtoCart = () => {
+    // add to cart logic
+    console.log("adddminggg...");
+  };
   return (
     <Dialog>
       <DialogTrigger className="bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150">
@@ -62,7 +67,7 @@ const ProductModal = ({ product }: { product: Product }) => {
             <ToppingList />
             <div className="flex items-center justify-between mt-12 ">
               <span className="font-bold">&#8360; 460</span>
-              <Button>
+              <Button onClick={handleAddtoCart}>
                 <ShoppingCart size={20} />
                 <span className="ml-2">Add to Cart</span>
               </Button>

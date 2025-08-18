@@ -21,7 +21,7 @@ const ProductModal = ({ product }: { product: Product }) => {
               alt={product.name}
               width={450}
               height={450}
-              src={"/pizza-main.png"}
+              src={product.image}
             />
           </div>
           <div className="w-2/3 p-8">

@@ -3,17 +3,34 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import React, { Suspense } from "react";
+import React, { startTransition, Suspense, useState } from "react";
 import ToppingList from "./topping-list";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { Product } from "@/lib";
-import { Skeleton } from "@/components/ui/skeleton";
+
+type chosenConfig = {
+  [key: string]: string;
+};
 
 const ProductModal = ({ product }: { product: Product }) => {
+  const [chosenConfig, setChosenConfig] = useState<chosenConfig>();
   const handleAddtoCart = () => {
     // add to cart logic
     console.log("adddminggg...");
+  };
+
+  const handleRadioChange = (key: string, data: string) => {
+    // {
+    //   Size :"Medium",
+    //   Crust:"Thin"
+    // }
+
+    startTransition(() => {
+      setChosenConfig((prev) => {
+        return { ...prev, [key]: data };
+      });
+    });
   };
   return (
     <Dialog>
@@ -41,6 +58,9 @@ const ProductModal = ({ product }: { product: Product }) => {
                     <RadioGroup
                       defaultValue={value.availableOptions[0]}
                       className="grid grid-cols-3 gap-4 mt-2"
+                      onValueChange={(data) => {
+                        handleRadioChange(key, data);
+                      }}
                     >
                       {value.availableOptions.map((option) => {
                         return (

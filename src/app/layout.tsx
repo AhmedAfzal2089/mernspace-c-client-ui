@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import Header from "@/components/custom/header";
+import StoreProvider from "./StoreProvider";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -21,15 +22,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          "min-h-screen bg-background font-manrope antialiased",
-          manrope.variable
-        )}
-      >
-        <Header />
-        <main>{children}</main>
-      </body>
+      <StoreProvider>
+        {/* // this is a client component */}
+        <body
+          // this whole body is a server component
+          className={cn(
+            "min-h-screen bg-background font-manrope antialiased",
+            manrope.variable
+          )}
+        >
+          <Header />
+          <main>{children}</main>
+        </body>
+      </StoreProvider>
     </html>
   );
 }

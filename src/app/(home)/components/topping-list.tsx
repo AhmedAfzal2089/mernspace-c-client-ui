@@ -2,7 +2,13 @@ import React, { startTransition, useEffect, useState } from "react";
 import ToppingCard from "./topping-card";
 import { Topping } from "@/lib";
 
-const ToppingList = async ({selectedToppings, handleCheckBoxCheck}:{selectedToppings:Topping[],handleCheckBoxCheck:(topping:Topping)=>void }) => {
+const ToppingList = ({
+  selectedToppings,
+  handleCheckBoxCheck,
+}: {
+  selectedToppings: Topping[];
+  handleCheckBoxCheck: (topping: Topping) => void;
+}) => {
   const [toppings, setToppings] = useState<Topping[]>([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -27,9 +33,6 @@ const ToppingList = async ({selectedToppings, handleCheckBoxCheck}:{selectedTopp
     fetchData();
   }, []);
 
-
-  
-
   return (
     <section className="mt-6">
       <h3>Extra toppings</h3>
@@ -47,6 +50,6 @@ const ToppingList = async ({selectedToppings, handleCheckBoxCheck}:{selectedTopp
       </div>
     </section>
   );
-}
+};
 
 export default ToppingList;

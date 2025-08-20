@@ -7,10 +7,15 @@ import {
   SelectValue,
 } from "../ui/select";
 import Link from "next/link";
-import { Phone, ShoppingBasket } from "lucide-react";
+import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { Tenant } from "@/lib";
-import CartCounter from "./cart-counter";
+import dynamic from "next/dynamic";
+
+// this will stop the server side rendering and fix the mismatch data
+const CartCounterWithoutSSR = dynamic(() => import("./cart-counter"), {
+  ssr: false,
+});
 
 const Header = async () => {
   const tenantsResponse = await fetch(
@@ -78,7 +83,7 @@ const Header = async () => {
               </Link>
             </li>
           </ul>
-          <CartCounter />
+          <CartCounterWithoutSSR />
           <div className="flex items-center gap-x-2 ml-12">
             <Phone />
             <span>+92 321-8184353</span>

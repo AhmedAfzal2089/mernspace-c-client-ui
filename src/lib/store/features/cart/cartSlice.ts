@@ -1,43 +1,47 @@
-import { Product, Topping } from "@/lib";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import { Product, Topping } from '@/lib';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface CartItem {
-  product: Product;
-  chosenConfiguration: {
-    priceConfiguration: {
-      [key: string]: string;
+    product: Product;
+    chosenConfiguration: {
+        priceConfiguration: {
+            [key: string]: string;
+        };
+        selectedToppings: Topping[];
     };
-    selectedToppings: Topping[];
-  };
 }
-
 export interface CartState {
-  cartItems: CartItem[] | [];
+    cartItems: CartItem[];
 }
 
 const initialState: CartState = {
-  cartItems: [],
+    cartItems: [],
 };
 
 export const cartSlice = createSlice({
-  name: "cart",
-  initialState,
-  reducers: {
-    addToCart: (state, actions: PayloadAction<CartItem>) => {
-      return {
-        cartItems: [
-          ...state.cartItems,
-          {
-            product: actions.payload.product,
-            chosenConfiguration: actions.payload.chosenConfiguration,
-          },
-        ],
-      };
+    name: 'cart',
+    initialState,
+    reducers: {
+        addToCart: (state, action: PayloadAction<CartItem>) => {
+            const newItem = {
+                product: action.payload.product,
+                chosenConfiguration: action.payload.chosenConfiguration,
+            };
+
+            window.localStorage.setItem('cartItems', JSON.stringify([...state.cartItems, newItem]));
+            return {
+                cartItems: [...state.cartItems, newItem],
+            };
+        },
+        setInitialCartItems: (state, action: PayloadAction<CartItem[]>) => {
+            state.cartItems.push(...action.payload);
+        },
     },
-  },
 });
 
-//Action creators are generated for each case reducer function
+// Action creators are generated for each case reducer function
+export const { addToCart, setInitialCartItems } = cartSlice.actions;
 
-export const {addToCart} = cartSlice.actions;
 export default cartSlice.reducer;

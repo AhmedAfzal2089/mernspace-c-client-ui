@@ -8,12 +8,15 @@ import ToppingList from "./topping-list";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { Product, Topping } from "@/lib";
+import { useAppDispatch } from "@/lib/hooks";
+import { addToCart } from "@/lib/store/features/cart/cartSlice";
 
 type chosenConfig = {
   [key: string]: string;
 };
 
 const ProductModal = ({ product }: { product: Product }) => {
+  const dispatch = useAppDispatch();
   const [chosenConfig, setChosenConfig] = useState<chosenConfig>();
   const [selectedToppings, setSelectedToppings] = React.useState<Topping[]>([]);
 
@@ -34,9 +37,15 @@ const ProductModal = ({ product }: { product: Product }) => {
     });
   };
 
-  const handleAddtoCart = () => {
-    // add to cart logic
-    console.log("adddminggg...");
+  const handleAddtoCart = (product: Product) => {
+    const itemToAdd = {
+      product,
+      chosenConfiguration: {
+        priceConfiguration: chosenConfig!,
+        selectedToppings: selectedToppings,
+      },
+    };
+    dispatch(addToCart(itemToAdd));
   };
 
   const handleRadioChange = (key: string, data: string) => {
@@ -108,7 +117,11 @@ const ProductModal = ({ product }: { product: Product }) => {
             </Suspense>
             <div className="flex items-center justify-between mt-12 ">
               <span className="font-bold">&#8360; 460</span>
-              <Button onClick={handleAddtoCart}>
+              <Button
+                onClick={() => {
+                  handleAddtoCart(product);
+                }}
+              >
                 <ShoppingCart size={20} />
                 <span className="ml-2">Add to Cart</span>
               </Button>

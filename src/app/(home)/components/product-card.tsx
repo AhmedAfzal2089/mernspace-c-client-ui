@@ -8,6 +8,7 @@ import Image from "next/image";
 import React from "react";
 import { Product } from "@/lib";
 import ProductModal from "./product-modal";
+import { getFromPrice } from "@/lib/utils";
 
 // export type Product = {
 //   id: string;
@@ -36,7 +37,7 @@ const ProductCard = ({ product }: PropTypes) => {
       <CardFooter className="flex items-center justify-between mt-4">
         <p>
           <span>From </span>
-          <span className="font-bold">Rs.{100}</span>
+          <span className="font-bold">Rs.{getFromPrice(product)}</span>
         </p>
         <ProductModal product={product} />
       </CardFooter>

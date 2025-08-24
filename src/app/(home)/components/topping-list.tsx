@@ -12,21 +12,21 @@ const ToppingList = ({
   const [toppings, setToppings] = useState<Topping[]>([]);
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=9`
-        );
-        const json = await response.json();
+      const toppingResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=9`
+      );
 
-        if (Array.isArray(json.data)) {
-          setToppings(json.data); // ✅ Only set the toppings array
-        } else {
-          console.error("Expected array in json.data, got:", json.data);
-          setToppings([]);
-        }
-      } catch (error) {
-        console.error("Error fetching toppings:", error);
-        setToppings([]);
+      const json = await toppingResponse.json();
+
+      if (Array.isArray(json.data)) {
+        const normalizedToppings = json.data.map((topping: any) => ({
+          ...topping,
+          id: topping._id, // ✅ Normalize _id to id
+        }));
+
+        setToppings(normalizedToppings);
+      } else {
+        console.error("Invalid toppings response:", json);
       }
     };
 

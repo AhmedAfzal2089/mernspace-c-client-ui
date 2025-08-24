@@ -1,40 +1,38 @@
 "use client";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Topping } from "@/lib";
+import React from "react";
 import { cn } from "@/lib/utils";
 import { CircleCheck } from "lucide-react";
-import Image from "next/image";
-import React, { useState } from "react";
+import { Topping } from "@/lib";
 
 type PropType = {
   topping: Topping;
   selectedToppings: Topping[];
   handleCheckBoxCheck: (topping: Topping) => void;
 };
-
 const ToppingCard = ({
   topping,
   selectedToppings,
   handleCheckBoxCheck,
 }: PropType) => {
+  // this some fucn will return true if any of the topping have value
   const isCurrentSelected = selectedToppings.some(
-    // this some fucn will return true if any of the topping have value
     (element) => element.id === topping.id
   );
+
   return (
     <Button
-      onClick={() => {
-        handleCheckBoxCheck(topping);
-      }}
+      onClick={() => handleCheckBoxCheck(topping)}
       variant={"outline"}
       className={cn(
         "flex flex-col h-42 relative",
         isCurrentSelected ? "border-primary" : ""
       )}
     >
-      <Image src={topping.image} alt={topping.name} width={80} height={80} />
+      <Image src={topping.image} width={80} height={80} alt={topping.name} />
       <h4>{topping.name}</h4>
-      <p>&#8360; {topping.price}</p>
+      <p>&#8377;{topping.price}</p>
       {isCurrentSelected && (
         <CircleCheck className="absolute top-1 right-1 text-primary" />
       )}

@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
-import React, { startTransition, Suspense, useState } from "react";
+import React, { startTransition, Suspense, useMemo, useState } from "react";
 import ToppingList from "./topping-list";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
@@ -11,7 +11,7 @@ import { Product, Topping } from "@/lib";
 import { useAppDispatch } from "@/lib/hooks";
 import { addToCart } from "@/lib/store/features/cart/cartSlice";
 
-type chosenConfig = {
+type ChosenConfig = {
   [key: string]: string;
 };
 
@@ -24,15 +24,32 @@ const ProductModal = ({ product }: { product: Product }) => {
     product.category.priceConfiguration
   )
     .map(([key, value]) => {
-      return {
-        [key]: value.availableOptions[0],
-      };
+      return { [key]: value.availableOptions[0] };
     })
     .reduce((acc, curr) => ({ ...acc, ...curr }), {});
-  console.log(defaultConfiguration);
-  const [chosenConfig, setChosenConfig] = useState<chosenConfig>(
-    defaultConfiguration as unknown as chosenConfig
+
+  const [chosenConfig, setChosenConfig] = useState<ChosenConfig>(
+    defaultConfiguration as unknown as ChosenConfig
   );
+
+  //for total price calculation
+  // in use memo we can return a value , if its dependency array is changed , not on every render
+  const totalPrice = useMemo(() => {
+    // when we have to add we use reduce , acc will add  it and curr will the the type of topping
+    const toppingsTotal = selectedToppings.reduce(
+      (acc, curr) => acc + curr.price,
+      0
+    );
+    const configPricing = Object.entries(chosenConfig).reduce(
+      (acc, [key, value]: [string, string]) => {
+        const price = product.priceConfiguration[key].availableOptions[value];
+        return acc + price;
+      },
+      0
+    );
+    return toppingsTotal + configPricing;
+  }, [chosenConfig, selectedToppings, product]);
+
   const handleCheckBoxCheck = (topping: Topping) => {
     const isAlreadyExists = selectedToppings.some(
       (element: Topping) => element.id === topping.id
@@ -129,7 +146,7 @@ const ProductModal = ({ product }: { product: Product }) => {
               />
             </Suspense>
             <div className="flex items-center justify-between mt-12 ">
-              <span className="font-bold">&#8360; 460</span>
+              <span className="font-bold">&#8360; {totalPrice}</span>
               <Button
                 onClick={() => {
                   handleAddtoCart(product);

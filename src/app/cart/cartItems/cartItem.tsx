@@ -7,9 +7,11 @@ import {
 } from "@/lib/store/features/cart/cartSlice";
 import { X } from "lucide-react";
 import { useDispatch } from "react-redux";
+import { useTotal } from "@/lib/hooks/useTotal";
 
 const CartItem = ({ item }: { item: Item }) => {
   const dispatch = useDispatch();
+  const total = useTotal(item);
   return (
     <>
       <div className="grid grid-cols-2">
@@ -42,8 +44,13 @@ const CartItem = ({ item }: { item: Item }) => {
             </QtyChanger>
           </div>
           <div className="flex">
-            <div className="font-bold w-12">&#8377;300</div>
-            <button className="ml-4" onClick={() => {dispatch(changeQty({hash:item.hash as string, qty:0}))}}>
+            <div className="font-bold w-12">&#8377;{total * item.qty}</div>
+            <button
+              className="ml-4"
+              onClick={() => {
+                dispatch(changeQty({ hash: item.hash as string, qty: 0 }));
+              }}
+            >
               <X />
             </button>
           </div>

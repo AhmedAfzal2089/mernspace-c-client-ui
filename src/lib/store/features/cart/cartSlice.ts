@@ -1,44 +1,52 @@
+import { Product, Topping } from "@/lib";
+import { hashTheItem } from "@/lib/utils";
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
-import { Product, Topping } from '@/lib';
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-
-export interface CartItem {
-    product: Product;
-    chosenConfiguration: {
-        priceConfiguration: {
-            [key: string]: string;
-        };
-        selectedToppings: Topping[];
+export interface CartItem
+  extends Pick<Product, "_id" | "name" | "image" | "priceConfiguration"> {
+  chosenConfiguration: {
+    priceConfiguration: {
+      [key: string]: string;
     };
+    selectedToppings: Topping[];
+  };
+  qty: number;
+  hash?: string;
 }
 export interface CartState {
-    cartItems: CartItem[];
+  cartItems: CartItem[];
 }
 
 const initialState: CartState = {
-    cartItems: [],
+  cartItems: [],
 };
 
 export const cartSlice = createSlice({
-    name: 'cart',
-    initialState,
-    reducers: {
-        addToCart: (state, action: PayloadAction<CartItem>) => {
-            const newItem = {
-                product: action.payload.product,
-                chosenConfiguration: action.payload.chosenConfiguration,
-            };
+  name: "cart",
+  initialState,
+  reducers: {
+    addToCart: (state, action: PayloadAction<CartItem>) => {
+      const hash = hashTheItem(action.payload);
+      const newItem = {
+        ...action.payload,
+        hash: hash,
+        // product: action.payload.product,
+        // chosenConfiguration: action.payload.chosenConfiguration,
+      };
 
-            window.localStorage.setItem('cartItems', JSON.stringify([...state.cartItems, newItem]));
-            return {
-                cartItems: [...state.cartItems, newItem],
-            };
-        },
-        setInitialCartItems: (state, action: PayloadAction<CartItem[]>) => {
-            state.cartItems.push(...action.payload);
-        },
+      window.localStorage.setItem(
+        "cartItems",
+        JSON.stringify([...state.cartItems, newItem])
+      );
+      return {
+        cartItems: [...state.cartItems, newItem],
+      };
     },
+    setInitialCartItems: (state, action: PayloadAction<CartItem[]>) => {
+      state.cartItems.push(...action.payload);
+    },
+  },
 });
 
 // Action creators are generated for each case reducer function

@@ -32,7 +32,7 @@ const ToppingCard = ({
     >
       <Image src={topping.image} width={80} height={80} alt={topping.name} />
       <h4>{topping.name}</h4>
-      <p>&#8377;{topping.price}</p>
+      <p>&#8360; {topping.price}</p>
       {isCurrentSelected && (
         <CircleCheck className="absolute top-1 right-1 text-primary" />
       )}

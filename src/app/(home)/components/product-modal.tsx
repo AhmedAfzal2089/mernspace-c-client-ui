@@ -6,11 +6,23 @@ import Image from "next/image";
 import React, { startTransition, Suspense, useMemo, useState } from "react";
 import ToppingList from "./topping-list";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { CircleCheck, ShoppingCart } from "lucide-react";
 import { Product, Topping } from "@/lib";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { addToCart, CartItem } from "@/lib/store/features/cart/cartSlice";
 import { hashTheItem } from "@/lib/utils";
+import { toast } from "sonner";
+
+const SuccessToast = () => {
+  return (
+    <>
+      <div className="flex items-center gap-2">
+        <CircleCheck className="text-green-500" />
+        <span className="font-bold">Added to Cart</span>
+      </div>
+    </>
+  );
+};
 
 type ChosenConfig = {
   [key: string]: string;
@@ -104,6 +116,7 @@ const ProductModal = ({ product }: { product: Product }) => {
     dispatch(addToCart(itemToAdd));
     setSelectedToppings([]);
     setDialogOpen(false);
+    toast(<SuccessToast />);
   };
 
   const handleRadioChange = (key: string, data: string) => {

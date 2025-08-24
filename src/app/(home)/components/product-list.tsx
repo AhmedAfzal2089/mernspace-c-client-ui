@@ -4,12 +4,16 @@ import ProductCard from "./product-card";
 import { Category, Product } from "@/lib";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const ProductList = async () => {
+const ProductList = async ({
+  searchParams,
+}: {
+  searchParams: { restaurantId: string };
+}) => {
   // this will work concurrently , at same
   const [categoryResponse, productResponse] = await Promise.all([
     fetch(`${process.env.BACKEND_URL}/api/catalog/categories`),
     fetch(
-      `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=6`,
+      `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=${searchParams.restaurantId}`,
       {
         next: {
           revalidate: 3600, // 1 hour

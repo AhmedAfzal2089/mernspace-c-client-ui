@@ -1,11 +1,12 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import CartItem from "./cartItem";
 import Link from "next/link";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/lib/hooks";
+import { getItemTotal } from "@/lib/utils";
 
 const CartItems = () => {
   const searchParams = useSearchParams();
@@ -16,10 +17,15 @@ const CartItems = () => {
   }, []);
 
   const cart = useAppSelector((state) => state.cart.cartItems);
+  const finalTotal = useMemo(() => {
+    return cart.reduce((acc, curr) => {
+      return acc + curr.qty * getItemTotal(curr);
+    }, 0);
+  }, [cart]);
+
   if (!isClient) {
     return null;
   }
-
   if (!cart.length) {
     return (
       <div className="flex items-center gap-2">
@@ -43,7 +49,7 @@ const CartItems = () => {
         <CartItem key={cartItem.hash} item={cartItem} />
       ))}
       <div className="flex justify-between items-center">
-        <span className="font-bold text-xl">&#8377;{4000}</span>
+        <span className="font-bold text-xl">&#8360; {finalTotal}</span>
         <Button>
           Checkout
           <ArrowRight size={16} className="ml-2" />

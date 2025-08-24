@@ -102,7 +102,8 @@ const ProductModal = ({ product }: { product: Product }) => {
     };
 
     dispatch(addToCart(itemToAdd));
-    setDialogOpen(false)
+    setSelectedToppings([]);
+    setDialogOpen(false);
   };
 
   const handleRadioChange = (key: string, data: string) => {

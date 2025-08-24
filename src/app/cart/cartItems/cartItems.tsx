@@ -3,12 +3,13 @@ import React, { useEffect, useMemo } from "react";
 import CartItem from "./cartItem";
 import Link from "next/link";
 import { ArrowRight, ShoppingCart } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/lib/hooks";
 import { getItemTotal } from "@/lib/utils";
 
 const CartItems = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [isClient, setIsClient] = React.useState(false);
@@ -50,7 +51,7 @@ const CartItems = () => {
       ))}
       <div className="flex justify-between items-center">
         <span className="font-bold text-xl">&#8360; {finalTotal}</span>
-        <Button>
+        <Button onClick={() => router.push("/checkout")}>
           Checkout
           <ArrowRight size={16} className="ml-2" />
         </Button>

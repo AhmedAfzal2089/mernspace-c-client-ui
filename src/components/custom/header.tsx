@@ -1,17 +1,11 @@
 import React from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { Tenant } from "@/lib";
 import dynamic from "next/dynamic";
 import TenantSelect from "./tenant-select";
+import { getSession } from "@/lib/session";
 
 // this will stop the server side rendering and fix the mismatch data
 const CartCounterWithoutSSR = dynamic(() => import("./cart-counter"), {
@@ -19,6 +13,7 @@ const CartCounterWithoutSSR = dynamic(() => import("./cart-counter"), {
 });
 
 const Header = async () => {
+  const session = await getSession();
   const tenantsResponse = await fetch(
     `${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,
     {
@@ -56,7 +51,7 @@ const Header = async () => {
               fill="#484848"
             />
           </svg>
-          <TenantSelect restaurants={restaurants}/>
+          <TenantSelect restaurants={restaurants} />
         </div>
         <div className="flex items-center gap-x-4">
           <ul className="flex items-center font-medium space-x-4">
@@ -76,7 +71,7 @@ const Header = async () => {
             <Phone />
             <span>+92 321-8184353</span>
           </div>
-          <Button size={"sm"}>Logout</Button>
+          <Button size={"sm"}>{session ? "Logout" : "Login"}</Button>
         </div>
       </nav>
     </header>

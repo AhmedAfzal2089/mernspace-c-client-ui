@@ -6,6 +6,7 @@ import { Tenant } from "@/lib";
 import dynamic from "next/dynamic";
 import TenantSelect from "./tenant-select";
 import { getSession } from "@/lib/session";
+import Logout from "./logout";
 
 // this will stop the server side rendering and fix the mismatch data
 const CartCounterWithoutSSR = dynamic(() => import("./cart-counter"), {
@@ -71,7 +72,13 @@ const Header = async () => {
             <Phone />
             <span>+92 321-8184353</span>
           </div>
-          <Button size={"sm"}>{session ? "Logout" : "Login"}</Button>
+          {session ? (
+            <Logout />
+          ) : (
+            <Button size={"sm"} asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+          )}
         </div>
       </nav>
     </header>

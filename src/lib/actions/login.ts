@@ -25,7 +25,7 @@ export default async function login(prevState: any, formData: FormData) {
       const error = await response.json();
       return {
         type: "error",
-        message: error.errors[0].message,
+        message: error.errors[0].msg,
       };
     }
 
@@ -41,27 +41,27 @@ export default async function login(prevState: any, formData: FormData) {
     const parsedAccessToken = cookie.parse(accessToken);
     const parsedRefreshToken = cookie.parse(refreshToken);
 
-     cookies().set({
-            name: 'accessToken',
-            value: parsedAccessToken.accessToken,
-            expires: new Date(parsedAccessToken.expires),
-            // todo: check auth service for httpOnly parameter
-            httpOnly: (parsedAccessToken.httpOnly as unknown as boolean) || true,
-            path: parsedAccessToken.Path,
-            domain: parsedAccessToken.Domain,
-            sameSite: parsedAccessToken.SameSite as 'strict',
-        });
+    cookies().set({
+      name: "accessToken",
+      value: parsedAccessToken.accessToken,
+      expires: new Date(parsedAccessToken.expires),
+      // todo: check auth service for httpOnly parameter
+      httpOnly: (parsedAccessToken.httpOnly as unknown as boolean) || true,
+      path: parsedAccessToken.Path,
+      domain: parsedAccessToken.Domain,
+      sameSite: parsedAccessToken.SameSite as "strict",
+    });
 
-        cookies().set({
-            name: 'refreshToken',
-            value: parsedRefreshToken.refreshToken,
-            expires: new Date(parsedRefreshToken.expires),
-            // todo: check auth service for httpOnly parameter
-            httpOnly: (parsedRefreshToken.httpOnly as unknown as boolean) || true,
-            path: parsedRefreshToken.Path,
-            domain: parsedRefreshToken.Domain,
-            sameSite: parsedRefreshToken.SameSite as 'strict',
-        });
+    cookies().set({
+      name: "refreshToken",
+      value: parsedRefreshToken.refreshToken,
+      expires: new Date(parsedRefreshToken.expires),
+      // todo: check auth service for httpOnly parameter
+      httpOnly: (parsedRefreshToken.httpOnly as unknown as boolean) || true,
+      path: parsedRefreshToken.Path,
+      domain: parsedRefreshToken.Domain,
+      sameSite: parsedRefreshToken.SameSite as "strict",
+    });
 
     return {
       type: "success",

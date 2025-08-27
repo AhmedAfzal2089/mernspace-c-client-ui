@@ -30,9 +30,11 @@ export default async function Checkout({
 }) {
   const session = await getSession();
   console.log("searchParams", searchParams);
-  const queryString = new URLSearchParams(searchParams).toString();
+  const sParams = new URLSearchParams(searchParams);
+  const existingQueryString = sParams.toString();
+  sParams.append("return-to", `/checkout?${existingQueryString}`);
   if (!session) {
-    redirect(`/login?${queryString}`);
+    redirect(`/login?${sParams}`);
   }
   return (
     <div className="flex container gap-6 mt-16">

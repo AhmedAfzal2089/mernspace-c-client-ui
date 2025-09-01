@@ -31,7 +31,7 @@ const formSchema = z.object({
   }),
 });
 
-const AddAddress = ({ customerId }: { customerId: string }) => {
+const AddAddress = ({ customerId }: { customerId: string | undefined }) => {
   const [isModelOpen, setIsModelOpen] = useState(false);
   const quertClient = useQueryClient();
   const addressForm = useForm<z.infer<typeof formSchema>>({
@@ -44,7 +44,8 @@ const AddAddress = ({ customerId }: { customerId: string }) => {
   const { mutate, isPending } = useMutation({
     mutationKey: ["address", customerId],
     mutationFn: async (address: string) => {
-      return await addAddress(customerId, address);
+      //todo: proper validation for customer
+      return await addAddress(customerId!, address);
     },
     onSuccess: () => {
       addressForm.reset();

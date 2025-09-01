@@ -67,3 +67,13 @@ export type Customer = {
   email: string;
   addresses: Address[];
 };
+
+export type CouponCodeData = {
+  code: string;
+  tenantId: string;
+};
+
+export type CouponVerifyData = {
+  valid: boolean;
+  discount: number;
+};

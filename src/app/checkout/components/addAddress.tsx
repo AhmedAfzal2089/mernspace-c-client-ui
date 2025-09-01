@@ -53,9 +53,12 @@ const AddAddress = ({ customerId }: { customerId: string | undefined }) => {
       return quertClient.invalidateQueries({ queryKey: ["customer"] });
     },
   });
-  const handleAddressAdd = (data: z.infer<typeof formSchema>) => {
-    console.log("data", data);
-    mutate(data.address);
+  const handleAddressAdd = (e: React.FormEvent<HTMLFormElement>) => {
+    //the outer form will not be triggerd by this
+    e.stopPropagation();
+    return addressForm.handleSubmit((data: z.infer<typeof formSchema>) => {
+      mutate(data.address);
+    })(e);
   };
   return (
     <Dialog open={isModelOpen} onOpenChange={setIsModelOpen}>
@@ -67,7 +70,7 @@ const AddAddress = ({ customerId }: { customerId: string | undefined }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...addressForm}>
-          <form onSubmit={addressForm.handleSubmit(handleAddressAdd)}>
+          <form onSubmit={handleAddressAdd}>
             <DialogHeader>
               <DialogTitle>Add Address</DialogTitle>
               <DialogDescription>

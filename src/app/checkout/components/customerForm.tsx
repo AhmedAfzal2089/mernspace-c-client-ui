@@ -18,8 +18,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Customer } from "@/lib";
 import { getCustomer } from "@/lib/http/api";
 import { useQuery } from "@tanstack/react-query";
-import { Circle, Coins, CreditCard, Plus } from "lucide-react";
+import { Circle, Coins, CreditCard, LoaderCircle, Plus } from "lucide-react";
 import React from "react";
+import AddAddress from "./addAddress";
 
 const CustomerForm = () => {
   const { data: customer, isLoading } = useQuery<Customer>({
@@ -29,7 +30,11 @@ const CustomerForm = () => {
     },
   });
   if (isLoading) {
-    return <h3>Loading....</h3>;
+    return (
+      <div className="flex items-center justify-center container">
+        <LoaderCircle className="animate-spin" />
+      </div>
+    );
   }
   return (
     <div className="flex container gap-6 mt-16">
@@ -73,31 +78,7 @@ const CustomerForm = () => {
               <div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="name">Address</Label>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size={"sm"} variant={"link"}>
-                        <Plus size={"16"} />
-                        <span className="ml-2">Add New Address</span>
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Add Address</DialogTitle>
-                        <DialogDescription>
-                          We can save your address for next time order.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div>
-                          <Label htmlFor="address">Address</Label>
-                          <Textarea className="mt-2" />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit">Save changes</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                  <AddAddress customerId={customer?._id} />
                 </div>
                 <RadioGroup
                   defaultValue="option-one"

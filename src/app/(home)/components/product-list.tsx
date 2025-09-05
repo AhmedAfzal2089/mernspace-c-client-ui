@@ -16,7 +16,7 @@ const ProductList = async ({
       `${process.env.BACKEND_URL}/api/catalog/products?perPage=100&tenantId=${searchParams.restaurantId}`,
       {
         next: {
-          revalidate: 3600, // 1 hour
+          revalidate: 0, // 1 hour
         },
       }
     ),

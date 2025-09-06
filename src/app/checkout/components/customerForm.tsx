@@ -50,14 +50,16 @@ const CustomerForm = () => {
       return (await getCustomer().then((res) => res.data)) as Customer;
     },
   });
-  const { mutate, isPending: isPlaceOrderPending } = useMutation({
+  const { mutate, isPending: isPlaceOrderPending } = useMutation<{ paymentUrl: string | null }, unknown, OrderData>({
     mutationKey: ["order"],
     mutationFn: async (data: OrderData) => {
       // console.log("Calling mutationFN");
       const idempotencyKey = idempotencyKeyRef.current
         ? idempotencyKeyRef.current
         : (idempotencyKeyRef.current = uuidv4() + customer?._id);
-      return await createOrder(data, idempotencyKey).then((res) => res.data);
+      const res = await createOrder(data, idempotencyKey);
+      // Ensure the returned data matches the expected type
+      return res.data as { paymentUrl: string | null };
     },
     retry: 3,
     onSuccess: (data: { paymentUrl: string | null }) => {

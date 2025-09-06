@@ -6,6 +6,7 @@ import { useAppSelector } from "@/lib/hooks";
 import { verifyCoupon } from "@/lib/http/api";
 import { getItemTotal } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
+import { LoaderCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React, { useMemo, useRef, useState } from "react";
 //todo: move to this to server, and calculate according to your business rules
@@ -13,8 +14,10 @@ import React, { useMemo, useRef, useState } from "react";
 const TAXES_PERCENTAGE = 18;
 const DELIVERY_CHARGES = 100;
 const OrderSummary = ({
+  isPlaceOrderPending,
   handleCouponCodeChange,
 }: {
+  isPlaceOrderPending:boolean
   handleCouponCodeChange: (code: string) => void;
 }) => {
   const searchParams = useSearchParams();
@@ -144,7 +147,10 @@ const OrderSummary = ({
         </div>
 
         <div className="text-right mt-6">
-          <Button>Place order</Button>
+          <Button disabled={isPlaceOrderPending}>
+            {
+              isPlaceOrderPending?(<span className="flex items-center gap-2"><LoaderCircle className="animate-spin"/><span>Please Wait..</span></span>):(<span>Place Order</span>)
+            }</Button>
         </div>
       </CardContent>
     </Card>

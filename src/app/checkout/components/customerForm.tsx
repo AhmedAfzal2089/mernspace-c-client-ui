@@ -1,13 +1,13 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { v4 as uuidv4 } from "uuid";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Customer } from "@/lib";
-import { getCustomer } from "@/lib/http/api";
-import { useQuery } from "@tanstack/react-query";
+import { Customer, OrderData } from "@/lib";
+import { createOrder, getCustomer } from "@/lib/http/api";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Coins, CreditCard, LoaderCircle, Plus } from "lucide-react";
 import React, { useRef } from "react";
 import AddAddress from "./addAddress";
@@ -36,6 +36,7 @@ const formSchema = z.object({
 const CustomerForm = () => {
   const cart = useAppSelector((state) => state.cart);
   const chosenCouponCode = useRef("");
+  const idempotencyKeyRef = useRef("");
   const searchParams = useSearchParams();
   const customerForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,6 +49,17 @@ const CustomerForm = () => {
     queryFn: async () => {
       return (await getCustomer().then((res) => res.data)) as Customer;
     },
+  });
+  const { mutate } = useMutation({
+    mutationKey: ["order"],
+    mutationFn: async (data: OrderData) => {
+      // console.log("Calling mutationFN");
+      const idempotencyKey = idempotencyKeyRef.current
+        ? idempotencyKeyRef.current
+        : (idempotencyKeyRef.current = uuidv4() + customer?._id);
+      await createOrder(data, idempotencyKey);
+    },
+    retry: 3,
   });
   if (isLoading) {
     return (
@@ -67,12 +79,12 @@ const CustomerForm = () => {
       cart: cart.cartItems,
       couponCode: chosenCouponCode.current ? chosenCouponCode.current : "",
       tenantId: tenantId,
-      customerId: customer?._id,
+      customerId: customer ? customer._id : "",
       comment: data.comment,
       address: data.address,
       paymentMode: data.paymentMode,
     };
-    console.log("data", orderData);
+    mutate(orderData);
   };
   return (
     <Form {...customerForm}>

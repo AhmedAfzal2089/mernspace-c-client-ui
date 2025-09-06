@@ -1,3 +1,5 @@
+import { CartItem } from "./store/features/cart/cartSlice";
+
 export interface Tenant {
   id: string;
   name: string;
@@ -76,4 +78,14 @@ export type CouponCodeData = {
 export type CouponVerifyData = {
   valid: boolean;
   discount: number;
+};
+
+export type OrderData = {
+  cart: CartItem[];
+  couponCode: string;
+  tenantId: string;
+  customerId: string;
+  comment: string;
+  address: string;
+  paymentMode: string;
 };

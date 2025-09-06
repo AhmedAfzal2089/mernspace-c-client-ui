@@ -12,7 +12,11 @@ import React, { useMemo, useRef, useState } from "react";
 //TODO: error handling the the coupon if invalid coupon comes in then reset to before
 const TAXES_PERCENTAGE = 18;
 const DELIVERY_CHARGES = 100;
-const OrderSummary = () => {
+const OrderSummary = ({
+  handleCouponCodeChange,
+}: {
+  handleCouponCodeChange: (code: string) => void;
+}) => {
   const searchParams = useSearchParams();
   const cart = useAppSelector((state) => state.cart.cartItems);
   const [discountPercentage, setDiscountPercentage] = useState(0);
@@ -69,9 +73,13 @@ const OrderSummary = () => {
 
       if (data.valid) {
         setDiscountError("");
+        handleCouponCodeChange(
+          couponCodeRef.current ? couponCodeRef.current.value : ""
+        );
         setDiscountPercentage(data.discount);
       } else {
         setDiscountError("Coupon is invalid");
+        handleCouponCodeChange("");
         setDiscountPercentage(0);
       }
     },

@@ -9,7 +9,7 @@ import { Customer } from "@/lib";
 import { getCustomer } from "@/lib/http/api";
 import { useQuery } from "@tanstack/react-query";
 import { Coins, CreditCard, LoaderCircle, Plus } from "lucide-react";
-import React from "react";
+import React, { useRef } from "react";
 import AddAddress from "./addAddress";
 import z from "zod";
 import { useForm } from "react-hook-form";
@@ -22,6 +22,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import OrderSummary from "./orderSummary";
+import { useAppSelector } from "@/lib/hooks";
+import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   address: z.string().nonempty("Please Select An Address"),
@@ -32,6 +34,9 @@ const formSchema = z.object({
 });
 
 const CustomerForm = () => {
+  const cart = useAppSelector((state) => state.cart);
+  const chosenCouponCode = useRef("");
+  const searchParams = useSearchParams();
   const customerForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,7 +58,21 @@ const CustomerForm = () => {
   }
   const handlePlaceOrder = (data: z.infer<typeof formSchema>) => {
     // handle place order call
-    console.log("data", data);
+    const tenantId = searchParams.get("restaurantId");
+    if (!tenantId) {
+      alert("RestaurantId is required");
+      return;
+    }
+    const orderData = {
+      cart: cart.cartItems,
+      couponCode: chosenCouponCode.current ? chosenCouponCode.current : "",
+      tenantId: tenantId,
+      customerId: customer?._id,
+      comment: data.comment,
+      address: data.address,
+      paymentMode: data.paymentMode,
+    };
+    console.log("data", orderData);
   };
   return (
     <Form {...customerForm}>
@@ -217,7 +236,11 @@ const CustomerForm = () => {
               </div>
             </CardContent>
           </Card>
-          <OrderSummary />
+          <OrderSummary
+            handleCouponCodeChange={(code) => {
+              chosenCouponCode.current = code;
+            }}
+          />
         </div>
       </form>
     </Form>

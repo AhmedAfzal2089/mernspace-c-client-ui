@@ -26,7 +26,6 @@ const SingleOrder = async ({ params }: { params: { orderId: string } }) => {
     throw new Error("Failed to fetch single order");
   }
   const order: Order = await response.json();
-  console.log(order);
   return (
     <div className="container mt-6 flex flex-col gap-6">
       <Card>
@@ -35,7 +34,7 @@ const SingleOrder = async ({ params }: { params: { orderId: string } }) => {
           <CardDescription>Track the order status. </CardDescription>
         </CardHeader>
         <CardContent>
-          <OrderStatus />
+          <OrderStatus orderId={order._id} />
         </CardContent>
       </Card>
 

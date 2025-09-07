@@ -15,9 +15,8 @@ import React from "react";
 const Payment = ({
   searchParams,
 }: {
-  //   {/* // todo:get tenantId from redirect url, add it on backend */}
 
-  searchParams: { success: string; orderId: string };
+  searchParams: { success: string; orderId: string; restaurantId: string };
 }) => {
   const isOrderSuccess = searchParams.success === "true";
   return (
@@ -60,7 +59,7 @@ const Payment = ({
               <LayoutDashboard size={20} />
               <h2 className="text-base font-medium">Order reference:</h2>
               <Link
-                href={`/order-status/${searchParams.orderId}`}
+                href={`/order-status/${searchParams.orderId}?restaurantId=${searchParams.restaurantId}`}
                 className="underline"
               >
                 {searchParams.orderId}
@@ -76,15 +75,14 @@ const Payment = ({
       )}
       {isOrderSuccess ? (
         <Button asChild className="mt-6">
-          <Link href="/order/1223" className="flex items-center gap-2">
+          <Link href={`/order-status/${searchParams.orderId}?restaurantId=${searchParams.restaurantId}`} className="flex items-center gap-2">
             <ArrowLeft size={20} className="text-white" />
             <span>Go to Order Status Page</span>
           </Link>
         </Button>
       ) : (
         <Button asChild className="mt-6">
-          {/* // todo:get tenantId from redirect url, add it on backend */}
-          <Link href="/checkout" className="flex items-center gap-2">
+          <Link  href={`/checkout?restaurantId=${searchParams.restaurantId}`} className="flex items-center gap-2">
             <ArrowLeft size={20} className="text-white" />
             <span>Go to Checkout</span>
           </Link>

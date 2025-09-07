@@ -22,8 +22,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import OrderSummary from "./orderSummary";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useSearchParams } from "next/navigation";
+import { clearCart } from "@/lib/store/features/cart/cartSlice";
 
 const formSchema = z.object({
   address: z.string().nonempty("Please Select An Address"),
@@ -34,6 +35,7 @@ const formSchema = z.object({
 });
 
 const CustomerForm = () => {
+  const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart);
   const chosenCouponCode = useRef("");
   const idempotencyKeyRef = useRef("");
@@ -50,7 +52,11 @@ const CustomerForm = () => {
       return (await getCustomer().then((res) => res.data)) as Customer;
     },
   });
-  const { mutate, isPending: isPlaceOrderPending } = useMutation<{ paymentUrl: string | null }, unknown, OrderData>({
+  const { mutate, isPending: isPlaceOrderPending } = useMutation<
+    { paymentUrl: string | null },
+    unknown,
+    OrderData
+  >({
     mutationKey: ["order"],
     mutationFn: async (data: OrderData) => {
       // console.log("Calling mutationFN");
@@ -67,6 +73,7 @@ const CustomerForm = () => {
         window.location.href = data.paymentUrl;
       }
       alert("order placed succ");
+      dispatch(clearCart());
       //todo:this will happen if payment mode is cash
     },
   });

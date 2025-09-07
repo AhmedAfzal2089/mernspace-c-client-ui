@@ -89,10 +89,9 @@ export type OrderData = {
   address: string;
   paymentMode: string;
 };
-
 export interface Order {
   _id: string;
-  customerId: string;
+  customerId: Customer;
   total: number;
   discount: number;
   taxes: number;

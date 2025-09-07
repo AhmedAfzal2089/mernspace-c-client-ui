@@ -1,6 +1,6 @@
 "use client";
 
-import { Step, StepItem, Stepper } from "@/components/stepper";
+import { Step, StepItem, Stepper, useStepper } from "@/components/stepper";
 import {
   CheckCheck,
   FileCheck,
@@ -30,10 +30,21 @@ const steps = [
   { label: "Delivered", icon: CheckCheck, description: "Order completed" },
 ] satisfies StepItem[];
 
+const StepperChanger = () => {
+  const { setStep, nextStep } = useStepper();
+
+  React.useEffect(() => {
+    setInterval(() => {
+      nextStep();
+    }, 2000);
+  }, []);
+  return <></>;
+};
+
 const OrderStatus = () => {
   return (
     <Stepper
-      initialStep={3}
+      initialStep={0}
       steps={steps}
       variant="circle-alt"
       className="py-8"
@@ -41,6 +52,7 @@ const OrderStatus = () => {
       {steps.map(({ label, icon }) => {
         return <Step label={label} icon={icon} checkIcon={icon}></Step>;
       })}
+      <StepperChanger />
     </Stepper>
   );
 };

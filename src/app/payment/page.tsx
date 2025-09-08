@@ -78,7 +78,7 @@ const Payment = ({
         {isOrderSuccess ? (
           <Button asChild className="mt-6">
             <Link
-              href={`/orders/${searchParams.orderId}?restaurantId=${searchParams.restaurantId}`}
+              href={`/order/${searchParams.orderId}?restaurantId=${searchParams.restaurantId}`}
               className="flex items-center gap-2"
             >
               <ArrowLeft size={20} className="text-white" />

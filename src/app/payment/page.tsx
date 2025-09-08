@@ -61,7 +61,7 @@ const Payment = ({
                 <LayoutDashboard size={20} />
                 <h2 className="text-base font-medium">Order reference:</h2>
                 <Link
-                  href={`/order-status/${searchParams.orderId}`}
+                  href={`/order/${searchParams.orderId}`}
                   className="underline"
                 >
                   {searchParams.orderId}
@@ -78,7 +78,7 @@ const Payment = ({
         {isOrderSuccess ? (
           <Button asChild className="mt-6">
             <Link
-              href={`/order-status/${searchParams.orderId}?restaurantId=${searchParams.restaurantId}`}
+              href={`/orders/${searchParams.orderId}?restaurantId=${searchParams.restaurantId}`}
               className="flex items-center gap-2"
             >
               <ArrowLeft size={20} className="text-white" />
